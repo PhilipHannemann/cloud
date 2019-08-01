@@ -1,0 +1,19 @@
+Vagrant.configure("2") do |config|
+  	config.vm.box = "v0rtex/xenial64"
+    #config.vm.box = "kaorimatz/ubuntu-16.04-amd64"
+  	
+    config.vm.network :forwarded_port, guest: 80, host: 8081 
+    config.vm.hostname = "docker"
+    config.vm.provision "shell", path: "script.sh"
+
+    config.ssh.insert_key = false
+
+    config.vm.synced_folder ".", "/vagrant"
+
+  config.vm.provider "virtualbox" do |docker|
+    docker.memory = "2048"
+    docker.cpus = 1
+    docker.name = "docker"
+    docker.linked_clone = true
+  end
+end

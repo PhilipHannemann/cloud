@@ -1,0 +1,22 @@
+Vagrant.configure("2") do |config|
+  	config.vm.box = "v0rtex/xenial64"
+    #config.vm.box = "kaorimatz/ubuntu-16.04-amd64"
+  	
+    config.vm.network :forwarded_port, guest: 80, host: 8081 
+    config.vm.hostname = "kubernets"
+
+    config.ssh.insert_key = false
+
+    config.vm.provision "shell", path: "script.sh", privileged: false
+    config.vm.synced_folder ".", "/vagrant"
+
+  config.vm.provider "virtualbox" do |kubernets|
+    kubernets.customize ["modifyvm", :id, "--cpuexecutioncap", "80"]
+    kubernets.memory = "2048"
+    kubernets.cpus = 2
+    kubernets.name = "kubernets"
+    kubernets.linked_clone = true
+    kubernets.customize ["modifyvm", :id, "--ioapic", "on"]
+    kubernets.customize ["modifyvm", :id, "--nested-hw-virt", "on"]
+  end
+end
